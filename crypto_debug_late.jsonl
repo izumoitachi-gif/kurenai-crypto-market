@@ -8,3 +8,8 @@
 {"type": "no_schedule_at_all", "workflow": "crypto_flash_B", "detail": "scheduled event=schedule のrunが0件・cron発火してない", "ts_utc": 1784789406}
 {"type": "no_schedule_at_all", "workflow": "crypto_flash_C", "detail": "scheduled event=schedule のrunが0件・cron発火してない", "ts_utc": 1784789407}
 {"type": "no_schedule_at_all", "workflow": "crypto_flash_D", "detail": "scheduled event=schedule のrunが0件・cron発火してない", "ts_utc": 1784789407}
+{"type": "no_schedule_at_all", "workflow": "crypto_price_notify", "detail": "scheduled event=schedule のrunが0件・cron発火してない", "ts_utc": 1784795418}
+{"type": "no_schedule_at_all", "workflow": "crypto_flash_A", "detail": "scheduled event=schedule のrunが0件・cron発火してない", "ts_utc": 1784795419}
+{"type": "no_schedule_at_all", "workflow": "crypto_flash_B", "detail": "scheduled event=schedule のrunが0件・cron発火してない", "ts_utc": 1784795419}
+{"type": "no_schedule_at_all", "workflow": "crypto_flash_C", "detail": "scheduled event=schedule のrunが0件・cron発火してない", "ts_utc": 1784795420}
+{"type": "no_schedule_at_all", "workflow": "crypto_flash_D", "detail": "scheduled event=schedule のrunが0件・cron発火してない", "ts_utc": 1784795420}
