@@ -268,3 +268,4 @@
 {"type": "stagnation", "workflow": "crypto_flash_D", "detail": "最新schedule発火から41分経過(閾値30分)", "last_schedule_at": "2026-07-23T20:04:05Z", "ts_utc": 1784839537}
 {"type": "stagnation", "workflow": "crypto_flash_C", "detail": "最新schedule発火から64分経過(閾値30分)", "last_schedule_at": "2026-07-23T19:41:36Z", "ts_utc": 1784839576}
 {"type": "stagnation", "workflow": "crypto_flash_D", "detail": "最新schedule発火から42分経過(閾値30分)", "last_schedule_at": "2026-07-23T20:04:05Z", "ts_utc": 1784839577}
+{"type": "stagnation", "workflow": "crypto_flash_D", "detail": "最新schedule発火から53分経過(閾値30分)", "last_schedule_at": "2026-07-23T20:04:05Z", "ts_utc": 1784840254}
