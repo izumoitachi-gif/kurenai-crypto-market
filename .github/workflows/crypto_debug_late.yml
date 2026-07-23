@@ -28,6 +28,9 @@ jobs:
       - name: Run debug late slot detector
         env:
           MARKET_WEBHOOK_SOURCELOG: ${{ secrets.MARKET_WEBHOOK_SOURCELOG }}
+          GH_READ_TOKEN: ${{ secrets.GH_READ_TOKEN }}
+          WATCH_OWNER: izumoitachi-gif
+          WATCH_REPO: kurenai-crypto-market
         run: python crypto_debug_late.py
 
       - name: Commit updated debug log (if changed)
