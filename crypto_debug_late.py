@@ -26,14 +26,14 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 DEBUG_FILE = os.path.join(HERE, "crypto_debug_late.jsonl")
 WEBHOOKS_JSON = os.path.join(HERE, "market_webhooks.json")
 UA = "KurenaiMarketMS/1.0 (izumoitachi@gmail.com)"
-OWNER = "izumoitachi-gif"
-REPO = "discord-rss-notifier"
+OWNER = os.environ.get("WATCH_OWNER", "izumoitachi-gif")
+REPO  = os.environ.get("WATCH_REPO",  "kurenai-crypto-market")
 
-# 監視対象workflow: 名前とcron間隔上限(この時間以上scheduled発火なければ詰まり)
-WATCH_WORKFLOWS = [
-    {"id": 318578372, "name": "crypto_price_notify",  "max_gap_min": 15},  # 5分毎cron→15分空きで詰まり
-    {"id": 318553620, "name": "market_notify",         "max_gap_min": 45},  # 25,55/8,38/0*/3→45分空きで詰まり
+# 監視対象workflow: 名前検索で解決するため id は空(name-based resolve on init)
+WATCH_WORKFLOW_NAMES = [
+    {"name": "crypto_price_notify",  "max_gap_min": 15},  # 5分毎cron→15分空きで詰まり
 ]
+WATCH_WORKFLOWS = []  # runtime に resolve_by_name() で埋める
 # crypto_flash A/B/C/Dも監視対象に追加(存在してれば)
 CRYPTO_FLASH_NAMES = ["crypto_flash_A", "crypto_flash_B", "crypto_flash_C", "crypto_flash_D"]
 
@@ -84,8 +84,8 @@ def detect_stagnation(runs, wf_name, max_gap_min):
                 "detail": f"直近5runs中{len(fails)}件failure"}
     return None  # 詰まってない=発火成功=ログ書かない
 
-def resolve_flash_workflows(gh_token):
-    """crypto_flash A/B/C/D workflowのidを名前から解決"""
+def resolve_by_name(gh_token, name_map):
+    """workflow名(部分一致)からid解決。name_map=[{name,max_gap_min},...]"""
     try:
         data = gh_api(f"/repos/{OWNER}/{REPO}/actions/workflows?per_page=100", gh_token)
     except Exception:
@@ -93,11 +93,15 @@ def resolve_flash_workflows(gh_token):
     results = []
     for w in data.get("workflows", []):
         path = w.get("path", "")
-        for name in CRYPTO_FLASH_NAMES:
-            if name in path:
-                results.append({"id": w["id"], "name": name, "max_gap_min": 30})
+        for entry in name_map:
+            if entry["name"] in path:
+                results.append({"id": w["id"], "name": entry["name"], "max_gap_min": entry["max_gap_min"]})
                 break
     return results
+
+def resolve_flash_workflows(gh_token):
+    """crypto_flash A/B/C/D workflowのidを名前から解決(30分閾値)"""
+    return resolve_by_name(gh_token, [{"name": n, "max_gap_min": 30} for n in CRYPTO_FLASH_NAMES])
 
 def fetch_runs(wf_id, gh_token, limit=20):
     return gh_api(f"/repos/{OWNER}/{REPO}/actions/workflows/{wf_id}/runs?per_page={limit}", gh_token)
@@ -138,7 +142,8 @@ def main():
     sourcelog_url = hooks.get("SOURCELOG")
     gh_token = os.environ.get("GH_READ_TOKEN", "")
 
-    watch = list(WATCH_WORKFLOWS) + resolve_flash_workflows(gh_token)
+    # 名前解決(crypto_price_notify + flash A/B/C/D 全部同じリポ)
+    watch = resolve_by_name(gh_token, WATCH_WORKFLOW_NAMES) + resolve_flash_workflows(gh_token)
     print(f"監視対象workflow: {len(watch)}本")
 
     stagnations = []

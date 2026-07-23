@@ -8,9 +8,8 @@ on:
     - cron: "1,11,21,31,41,51 * * * *"  # 冗長1(1分から10分間隔)
     - cron: "0 */2 * * *"         # 冗長2(2時間毎の最終保険)
   workflow_dispatch: {}
-  workflow_run:
-    workflows: ["IC Club 5-Category News Notifier", "AIラボ 15分類 AI News Notifier"]
-    types: [completed]
+  # Layer4: crypto専用リポなので IC Club/AIラボ workflow_run 参照は削除
+  # Layer3 trigger repo (kurenai-market-trigger) からの dispatch API で発火する
 
 permissions:
   contents: write
